@@ -8,7 +8,7 @@
  * Routes
  *   GET /                     free: product catalog (name, description, price, schema)
  *   GET /.well-known/x402     free: same catalog (x402 discovery convention)
- *   GET /sample               free: 5 verbatim sample rows from the production file
+ *   GET /sample               free: contents/license preview of the video pack
  *   GET /openapi.json         free: OpenAPI doc with x-payment-info (x402scan reads this)
  *   GET /healthz              free: 200 liveness probe (Render health check)
  *   GET /download             paid: x402 (exact, USDC on Base) -> ZIP from local file
@@ -248,14 +248,14 @@ function openApiDoc(request, cfg) {
       "/sample": {
         get: {
           operationId: "getSample",
-          summary: "Free preview: 5 verbatim sample rows (free)",
-          responses: { "200": { description: "Sample rows in the exact production schema" } },
+          summary: "Free preview: product contents and license (free)",
+          responses: { "200": { description: "Contents, license and attribution of the paid video pack" } },
         },
       },
       "/download": {
         get: {
-          operationId: "downloadDataset",
-          summary: "Download the full dataset ZIP (paid, x402)",
+          operationId: "downloadVideoPack",
+          summary: "Download the Kyoto Night Loops video pack (paid, x402)",
           description:
             "Returns HTTP 402 with x402 payment requirements when unpaid. Pay $9.00 USDC on Base (exact scheme) and retry with the PAYMENT-SIGNATURE header to receive the download URL and decryption key (JSON).",
           "x-402": { priceUsd: 9.0, network: PAYMENT.networkV2, asset: "USDC" },
