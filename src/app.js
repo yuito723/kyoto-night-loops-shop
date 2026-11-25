@@ -48,26 +48,30 @@ import { createDecipheriv, scryptSync } from "node:crypto";
 // ---------------------------------------------------------------------------
 
 const PRODUCT = {
-  name: "Kyoto Night Loops - Pontocho & Kamo River (2 seamless loops, HD)",
-  slug: "kyoto-night-loop-pontocho-v1",
-  version: "v1",
+  name: "Japan Night Loops - Kyoto, Matsue Castle & Kurashiki (6 seamless loops, HD)",
+  slug: "japan-night-loops-v2",
+  version: "v2",
   license: "Commercial use allowed (streams, videos, signage). No resale or redistribution of the raw file.",
-  attribution: "Source: MLIT PLATEAU (https://www.mlit.go.jp/plateau/), processed/edited. City model data: Kyoto City / MLIT, PDL 1.0 (CC BY 4.0 compatible).",
+  attribution: "Source: MLIT PLATEAU (https://www.mlit.go.jp/plateau/), processed/edited. City model data: Kyoto City, Matsue City, Kurashiki City / MLIT, PDL 1.0 (CC BY 4.0 compatible).",
   format:
-    "Encrypted ZIP (AES-256-GCM) containing two seamless loop MP4s (1664x960, 24fps, H.264) and two poster stills. The decryption key is delivered after payment.",
-  zipFilename: "kyoto-night-loops.zip",
+    "Encrypted ZIP (AES-256-GCM) containing six seamless loop MP4s (1664x960, 24fps, H.264) and six poster stills. The decryption key is delivered after payment.",
+  zipFilename: "japan-night-loops.zip",
   shortDescription:
-    "Two seamless night loops of Pontocho / Kamo River, Kyoto, built from real PLATEAU 3D city data (Blender + Wan 2.2 AI video, Apache 2.0). 1664x960 HD. Key-after-payment delivery.",
+    "Six seamless night loops of Kyoto (Pontocho & Kamo River), Matsue Castle and Kurashiki Bikan, built from real PLATEAU 3D city data (Blender + Wan 2.2 AI video, Apache 2.0). 1664x960 HD. Key-after-payment delivery.",
   description:
-    "Two seamless ambient loops of Kyoto's Pontocho district and the Kamo River at night: (1) a lantern-lit canal scene with flowing water, drifting mist and shimmering reflections, (2) a blue-hour dusk view of the riverside restaurant row. Unlike purely text-prompted AI video, the base geometry is the real surveyed city: MLIT PLATEAU open 3D city data of Kyoto, rendered in Blender, then cinematized with the open-source Wan 2.2 video model (Apache 2.0) - an AI-cinematized artistic rendering based on real city geometry, not a photograph. Each loop is 12-14 seconds, 1664x960, 24fps, and loops seamlessly. Delivered as an encrypted ZIP; the decryption key is returned by this endpoint after x402 payment settles.",
+    "Six seamless ambient night loops of famous Japanese scenes: (1) a forward dolly flight through a lantern-lit Pontocho canal street in Kyoto with drifting mist, (2) a lantern-lit canal scene with flowing water and shimmering reflections, (3) an aerial drone flight over the Kamo River at blue hour, (4) a blue-hour dusk view of the Kyoto riverside restaurant row, (5) the illuminated black keep of Matsue Castle above its moat, (6) white-walled storehouses and willows along the Kurashiki Bikan canal. Unlike purely text-prompted AI video, the base geometry is the real surveyed city: MLIT PLATEAU open 3D city data of Kyoto, Matsue and Kurashiki, rendered in Blender, then cinematized with the open-source Wan 2.2 video model (Apache 2.0) - AI-cinematized artistic renderings based on real city geometry, not photographs. Each loop is 12-16 seconds, 1664x960, 24fps, and loops seamlessly. Delivered as an encrypted ZIP; the decryption key is returned by this endpoint after x402 payment settles.",
   contactEmail: "yuito723@muse.ai",
 };
 
 // Column codebook (listing.md section 2)
 const SCHEMA = [
+  { column: "kyoto-pontocho-canal-dolly-loop.mp4", type: "MP4 (H.264)", description: "Seamless loop, 1664x960, 24fps, 16.2s - forward dolly through a lantern-lit canal street, mist and reflections" },
   { column: "kyoto-lantern-canal-loop.mp4", type: "MP4 (H.264)", description: "Seamless loop, 1664x960, 24fps, 12.1s - lantern-lit canal, flowing water and mist" },
+  { column: "kyoto-kamo-river-drone-loop.mp4", type: "MP4 (H.264)", description: "Seamless loop, 1664x960, 24fps, 16.2s - aerial drone flight over the Kamo River at blue hour" },
   { column: "kyoto-riverside-dusk-loop.mp4", type: "MP4 (H.264)", description: "Seamless loop, 1664x960, 24fps, 13.5s - blue-hour riverside restaurant row" },
-  { column: "poster-lantern-canal.png / poster-riverside-dusk.png", type: "PNG", description: "Poster still frames" },
+  { column: "matsue-castle-moat-loop.mp4", type: "MP4 (H.264)", description: "Seamless loop, 1664x960, 24fps, 16.2s - illuminated Matsue Castle keep above its moat, slow camera drift" },
+  { column: "kurashiki-bikan-canal-loop.mp4", type: "MP4 (H.264)", description: "Seamless loop, 1664x960, 24fps, 16.2s - Kurashiki Bikan canal, white-walled storehouses and willows, slow camera drift" },
+  { column: "poster-*.png (6 files)", type: "PNG", description: "Poster still frames, one per clip" },
   { column: "README.md", type: "Markdown", description: "Contents, production notes, PLATEAU attribution and license terms" },
 ];
 
@@ -232,7 +236,7 @@ function openApiDoc(request, cfg) {
       version: PRODUCT.version,
       description: PRODUCT.shortDescription,
       "x-guidance":
-        "Kyoto Night Loops is a pair of seamless ambient video loops of Pontocho / Kamo River, Kyoto (2x MP4 1664x960 24fps + 2 poster stills, delivered as an encrypted ZIP). GET / returns the product catalog. GET /download takes no input parameters and no request body: call it without payment to receive the x402 (HTTP 402) payment requirements, pay $9.00 USDC on Base (exact scheme), then retry the same GET with the PAYMENT-SIGNATURE header - on successful settlement a JSON response returns the public encrypted-file URL and its decryption key.",
+        "Japan Night Loops is a pack of six seamless ambient video loops of Kyoto (Pontocho & the Kamo River), Matsue Castle and Kurashiki Bikan (6x MP4 1664x960 24fps + 6 poster stills, delivered as an encrypted ZIP). GET / returns the product catalog. GET /download takes no input parameters and no request body: call it without payment to receive the x402 (HTTP 402) payment requirements, pay $9.00 USDC on Base (exact scheme), then retry the same GET with the PAYMENT-SIGNATURE header - on successful settlement a JSON response returns the public encrypted-file URL and its decryption key.",
       license: { name: PRODUCT.license },
       contact: { email: PRODUCT.contactEmail },
     },
@@ -255,7 +259,7 @@ function openApiDoc(request, cfg) {
       "/download": {
         get: {
           operationId: "downloadVideoPack",
-          summary: "Download the Kyoto Night Loops video pack (paid, x402)",
+          summary: "Download the Japan Night Loops video pack (paid, x402)",
           description:
             "Returns HTTP 402 with x402 payment requirements when unpaid. Pay $9.00 USDC on Base (exact scheme) and retry with the PAYMENT-SIGNATURE header to receive the download URL and decryption key (JSON).",
           "x-402": { priceUsd: 9.0, network: PAYMENT.networkV2, asset: "USDC" },
