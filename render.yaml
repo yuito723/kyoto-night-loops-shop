@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: kyoto-night-loops-shop
+    runtime: node
+    plan: free
+    buildCommand: ""
+    startCommand: node server.js
+    envVars:
+      - key: VIDEO_ENC_URL
+        sync: false
+      - key: VIDEO_KEY
+        sync: false
+      - key: VIDEO_FILENAME
+        value: kyoto-night-loops.zip
+      - key: VIDEO_SHA256
+        sync: false

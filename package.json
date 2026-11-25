@@ -1,0 +1,14 @@
+{
+  "description": "Self-hosted x402 sales endpoint for Kyoto Night Loop video (Node on Render + PayAI facilitator, key-after-payment delivery)",
+  "engines": {
+    "node": ">=20"
+  },
+  "name": "kyoto-loop-x402-shop",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "test:local": "node scripts/local-test.mjs"
+  },
+  "type": "module",
+  "version": "1.0.0"
+}
