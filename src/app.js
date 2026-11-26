@@ -48,18 +48,18 @@ import { createDecipheriv, scryptSync } from "node:crypto";
 // ---------------------------------------------------------------------------
 
 const PRODUCT = {
-  name: "Japan Night Loops - Kyoto, Matsue Castle & Kurashiki (6 seamless loops, HD)",
-  slug: "japan-night-loops-v2",
-  version: "v2",
+  name: "Japan Night Loops + Tours - Kyoto, Matsue Castle & Kurashiki (6 loops + 3 dynamic tours, HD)",
+  slug: "japan-night-loops-v3",
+  version: "v3",
   license: "Commercial use allowed (streams, videos, signage). No resale or redistribution of the raw file.",
   attribution: "Source: MLIT PLATEAU (https://www.mlit.go.jp/plateau/), processed/edited. City model data: Kyoto City, Matsue City, Kurashiki City / MLIT, PDL 1.0 (CC BY 4.0 compatible).",
   format:
-    "Encrypted ZIP (AES-256-GCM) containing six seamless loop MP4s (1664x960, 24fps, H.264) and six poster stills. The decryption key is delivered after payment.",
+    "Encrypted ZIP (AES-256-GCM) containing six seamless loop MP4s, three dynamic tour MP4s, five bonus dynamic shot MP4s (1664x960, 24fps, H.264) and poster stills. The decryption key is delivered after payment.",
   zipFilename: "japan-night-loops.zip",
   shortDescription:
-    "Six seamless night loops of Kyoto (Pontocho & Kamo River), Matsue Castle and Kurashiki Bikan, built from real PLATEAU 3D city data (Blender + Wan 2.2 AI video, Apache 2.0). 1664x960 HD. Key-after-payment delivery.",
+    "Six seamless night loops PLUS three dynamic first-person night tours of Kyoto (Pontocho & Kamo River), Matsue Castle and Kurashiki Bikan, built from real PLATEAU 3D city data (Blender + Wan 2.2 AI video, Apache 2.0). 1664x960 HD. Key-after-payment delivery.",
   description:
-    "Six seamless ambient night loops of famous Japanese scenes: (1) a forward dolly flight through a lantern-lit Pontocho canal street in Kyoto with drifting mist, (2) a lantern-lit canal scene with flowing water and shimmering reflections, (3) an aerial drone flight over the Kamo River at blue hour, (4) a blue-hour dusk view of the Kyoto riverside restaurant row, (5) the illuminated black keep of Matsue Castle above its moat, (6) white-walled storehouses and willows along the Kurashiki Bikan canal. Unlike purely text-prompted AI video, the base geometry is the real surveyed city: MLIT PLATEAU open 3D city data of Kyoto, Matsue and Kurashiki, rendered in Blender, then cinematized with the open-source Wan 2.2 video model (Apache 2.0) - AI-cinematized artistic renderings based on real city geometry, not photographs. Each loop is 12-16 seconds, 1664x960, 24fps, and loops seamlessly. Delivered as an encrypted ZIP; the decryption key is returned by this endpoint after x402 payment settles.",
+    "Six seamless ambient night loops PLUS three dynamic first-person night tours of famous Japanese scenes. Tours: a 10s Kyoto tour (first-person flight through the lantern canal, a fast aerial dive over the river and bridges, a rising shot over the lantern street), a 5.5s Matsue Castle tour (low fast approach over the moat toward the illuminated keep), and a 7s Kurashiki tour (speedboat run and calm glide down the Bikan canal), plus the five individual dynamic shots. Loops: (1) a forward dolly flight through a lantern-lit Pontocho canal street in Kyoto with drifting mist, (2) a lantern-lit canal scene with flowing water and shimmering reflections, (3) an aerial drone flight over the Kamo River at blue hour, (4) a blue-hour dusk view of the Kyoto riverside restaurant row, (5) the illuminated black keep of Matsue Castle above its moat, (6) white-walled storehouses and willows along the Kurashiki Bikan canal. Unlike purely text-prompted AI video, the base geometry is the real surveyed city: MLIT PLATEAU open 3D city data of Kyoto, Matsue and Kurashiki, rendered in Blender, then cinematized with the open-source Wan 2.2 video model (Apache 2.0) - AI-cinematized artistic renderings based on real city geometry, not photographs. Each loop is 12-16 seconds, 1664x960, 24fps, and loops seamlessly. Delivered as an encrypted ZIP; the decryption key is returned by this endpoint after x402 payment settles.",
   contactEmail: "yuito723@muse.ai",
 };
 
@@ -71,7 +71,11 @@ const SCHEMA = [
   { column: "kyoto-riverside-dusk-loop.mp4", type: "MP4 (H.264)", description: "Seamless loop, 1664x960, 24fps, 13.5s - blue-hour riverside restaurant row" },
   { column: "matsue-castle-moat-loop.mp4", type: "MP4 (H.264)", description: "Seamless loop, 1664x960, 24fps, 16.2s - illuminated Matsue Castle keep above its moat, slow camera drift" },
   { column: "kurashiki-bikan-canal-loop.mp4", type: "MP4 (H.264)", description: "Seamless loop, 1664x960, 24fps, 16.2s - Kurashiki Bikan canal, white-walled storehouses and willows, slow camera drift" },
-  { column: "poster-*.png (6 files)", type: "PNG", description: "Poster still frames, one per clip" },
+  { column: "kyoto-night-tour.mp4", type: "MP4 (H.264)", description: "Dynamic tour, 1664x960, 24fps, 10.1s - first-person lantern canal flight, aerial river dive, lantern street rise" },
+  { column: "matsue-night-tour.mp4", type: "MP4 (H.264)", description: "Dynamic tour, 1664x960, 24fps, 5.5s - low fast moat approach to the illuminated castle keep" },
+  { column: "kurashiki-night-tour.mp4", type: "MP4 (H.264)", description: "Dynamic tour, 1664x960, 24fps, 7.0s - speedboat run and calm glide on the Bikan canal" },
+  { column: "kyoto-lantern-canal-fpv.mp4 / kyoto-river-aerial-dive.mp4 / kyoto-lantern-street-rise.mp4 / matsue-castle-approach.mp4 / kurashiki-speedboat-canal.mp4", type: "MP4 (H.264)", description: "The five individual dynamic shots used in the tours, 1664x960, 24fps, ~4s each" },
+  { column: "poster-*.png (9 files)", type: "PNG", description: "Poster still frames, one per clip" },
   { column: "README.md", type: "Markdown", description: "Contents, production notes, PLATEAU attribution and license terms" },
 ];
 
@@ -236,7 +240,7 @@ function openApiDoc(request, cfg) {
       version: PRODUCT.version,
       description: PRODUCT.shortDescription,
       "x-guidance":
-        "Japan Night Loops is a pack of six seamless ambient video loops of Kyoto (Pontocho & the Kamo River), Matsue Castle and Kurashiki Bikan (6x MP4 1664x960 24fps + 6 poster stills, delivered as an encrypted ZIP). GET / returns the product catalog. GET /download takes no input parameters and no request body: call it without payment to receive the x402 (HTTP 402) payment requirements, pay $9.00 USDC on Base (exact scheme), then retry the same GET with the PAYMENT-SIGNATURE header - on successful settlement a JSON response returns the public encrypted-file URL and its decryption key.",
+        "Japan Night Loops + Tours is a pack of six seamless ambient video loops and three dynamic first-person night tours of Kyoto (Pontocho & the Kamo River), Matsue Castle and Kurashiki Bikan (14x MP4 1664x960 24fps + poster stills, delivered as an encrypted ZIP). GET / returns the product catalog. GET /download takes no input parameters and no request body: call it without payment to receive the x402 (HTTP 402) payment requirements, pay $9.00 USDC on Base (exact scheme), then retry the same GET with the PAYMENT-SIGNATURE header - on successful settlement a JSON response returns the public encrypted-file URL and its decryption key.",
       license: { name: PRODUCT.license },
       contact: { email: PRODUCT.contactEmail },
     },
